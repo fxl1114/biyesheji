@@ -12,7 +12,8 @@ class CustomDataset(Dataset):
 
     def __getitem__(self, idx):
         img_name = self.dataframe.iloc[idx, 0]
-        image = Image.open(img_name)
+        # ensure the image always has three channels
+        image = Image.open(img_name).convert("RGB")
 
         age = torch.tensor(self.dataframe.iloc[idx, 1], dtype=torch.float32)
         anatom_site = torch.tensor(self.dataframe.iloc[idx, 3], dtype=torch.float32)
@@ -21,5 +22,4 @@ class CustomDataset(Dataset):
 
         if self.transform:
             image = self.transform(image)
-
         return image, age, anatom_site, sex, label
